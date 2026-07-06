@@ -2,3 +2,7 @@ ipykernel
 fastapi
 sqlmodel
 python-dotenv
+imagekitio
+aiohttp
+google-genai
+pillow
