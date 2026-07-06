@@ -1,0 +1,4 @@
+ipykernel
+fastapi
+sqlmodel
+python-dotenv
