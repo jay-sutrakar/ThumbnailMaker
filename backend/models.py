@@ -1,6 +1,3 @@
-from _typeshed import importlib
-from _typeshed._type_checker_internals import promote
-from sqlalchemy import table
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Optional, List
@@ -12,7 +9,7 @@ def _uuid() -> str:
     return str(uuid7())
 
 
-def _now() -> dataclass:
+def _now() -> datetime:
     return datetime.now(timezone.utc)
 
 class Thumbnail(SQLModel, table=True):
@@ -20,6 +17,7 @@ class Thumbnail(SQLModel, table=True):
     job_id: str = Field(foreign_key='job.id')
     style_name: str = Field(default='')
     status: str = Field(default='padding')
+    imagekit_url: str = Field(default='')
     error_message: Optional[str] = Field(default=None)
     created_at: datetime = Field(default_factory=_now)
     updated_at: datetime = Field(default_factory=_now)

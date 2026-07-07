@@ -1,4 +1,3 @@
-from prompt_toolkit import prompt
 import os
 import logging
 import asyncio
@@ -14,7 +13,7 @@ from models import Job, Thumbnail
 from services.generator import process_job
 from services.imagekit_service import upload_file, get_variants
 from typing import Optional
-from services.generator import STYLES_ORDER
+from services.generator import STYLE_ORDER
 
 logger = logging.getLogger(__name__)
 
@@ -36,6 +35,7 @@ class ThumbnailResponse(BaseModel):
     status: str
     imagekit_url: str = None
     error_message: Optional[str] = None
+    variants: Optional[dict[str, str]] = None
 
 class JobResponse(BaseModel):
     id: str
@@ -51,6 +51,7 @@ class JobResponse(BaseModel):
 async def upload_headshot(file: UploadFile = File(...)):
     try:
         content = await file.read()
+        logger.info(f'Uploading headshot: {file.filename}')
         url = upload_file(content, file.filename, 'headshots', file.content_type)
         if not url:
             raise HTTPException(status_code=500, detail='Failed to upload headshot')
@@ -73,7 +74,7 @@ async def create_job(request: CreateJobRequest, session: Session = Depends(get_s
         status='pending'
     )
     session.add(job)
-    styles = STYLES_ORDER[:request.num_thumbnails]
+    styles = STYLE_ORDER[:request.num_thumbnails]
     for style_name in styles:
         thumbnail = Thumbnail(
             job_id=job.id,
@@ -114,5 +115,4 @@ async def get_job(job_id: str, session: Session = Depends(get_session)):
         status=job.status,
         thumbnails=thumbnail_response
     )    
-    
     

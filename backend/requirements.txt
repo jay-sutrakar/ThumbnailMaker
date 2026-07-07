@@ -6,3 +6,5 @@ imagekitio
 aiohttp
 google-genai
 pillow
+uvicorn
+python-multipart
